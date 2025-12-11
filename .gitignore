@@ -427,3 +427,5 @@ downloaded_docs/
 .idea/inspectionProfiles/profiles_settings.xml
 .idea/misc.xml
 .idea/zero-to-two-ai-server.iml
+
+tests/pjh/.crawl_state
