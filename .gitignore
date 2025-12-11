@@ -6,6 +6,7 @@
 # Reference: https://intellij-support.jetbrains.com/hc/en-us/articles/206544839
 
 # User-specific stuff
+*.idea
 .idea/**/workspace.xml
 .idea/**/tasks.xml
 .idea/**/usage.statistics.xml
@@ -424,3 +425,6 @@ models/
 
 # exclude donwloaded_docs
 downloaded_docs/
+.idea/inspectionProfiles/profiles_settings.xml
+.idea/misc.xml
+.idea/zero-to-two-ai-server.iml
