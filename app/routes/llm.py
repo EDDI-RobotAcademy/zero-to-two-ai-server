@@ -1,7 +1,7 @@
 from fastapi import APIRouter
 from infrastructure.llm.client import ask_llm
 
-router = APIRouter(prefix="/ai")
+router = APIRouter(prefix="/llm")
 
 @router.post("/test")
 def test_llm(query: dict):
