@@ -268,7 +268,7 @@ MANIFEST
 pip-log.txt
 pip-delete-this-directory.txt
 
-# Unit test / coverage reports
+# Unit tests / coverage reports
 htmlcov/
 .tox/
 .nox/
@@ -420,7 +420,6 @@ pyrightconfig.json
 models/
 
 # exclude txt
-*.txt
 
 # exclude donwloaded_docs
 downloaded_docs/
