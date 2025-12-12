@@ -2,6 +2,7 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from modules.auth.adapter.input.web.auth_router import router as auth_router
+from modules.tenant.adapter.input.web.tenant_request_router import router as tenant_request_router
 import os
 
 # FastAPI 앱 생성
@@ -25,6 +26,7 @@ app.add_middleware(
 
 # 라우터 등록
 app.include_router(auth_router)
+app.include_router(tenant_request_router)
 
 # 헬스체크 엔드포인트
 @app.get("/")
