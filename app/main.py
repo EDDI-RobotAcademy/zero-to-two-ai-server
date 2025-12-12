@@ -1,4 +1,3 @@
-"""Application entrypoint for DI/bootstrap and router wiring."""
 from modules.user.adapter.input.web.router.user_router import register_user_handler
 from modules.user.adapter.output.in_memory_user_repository import InMemoryUserRepository
 from modules.user.application.usecase.register_user import RegisterUserService
