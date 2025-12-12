@@ -7,7 +7,7 @@ from typing import List, Optional
 @dataclass
 class SearchListingQuery:
     preferred_area: List[str]
-    min_area: Optional[float] = None
+    area: Optional[float] = None  # 최소 면적(m2)
     room_count: Optional[int] = None
     bathroom_count: Optional[int] = None
     deal_type: Optional[str] = None  # 전세/매매/월세

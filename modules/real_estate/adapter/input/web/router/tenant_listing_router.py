@@ -17,7 +17,7 @@ router = APIRouter(prefix="/tenant/listings", tags=["tenant-listings"])
 
 class SearchRequest(BaseModel):
     preferred_area: List[str] = []
-    min_area: Optional[float] = None
+    area: Optional[float] = None  # 최소 면적(m2)
     room_count: Optional[int] = None
     bathroom_count: Optional[int] = None
     deal_type: Optional[str] = None
@@ -35,7 +35,7 @@ async def search_listings(
 ):
     query = SearchListingQuery(
         preferred_area=req.preferred_area,
-        min_area=req.min_area,
+        area=req.area,
         room_count=req.room_count,
         bathroom_count=req.bathroom_count,
         deal_type=req.deal_type,

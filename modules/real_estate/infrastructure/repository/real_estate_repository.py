@@ -106,8 +106,8 @@ class RealEstateRepository(RealEstateRepositoryPort, RealEstateReadPort, RealEst
                     from sqlalchemy import or_
 
                     q = q.filter(or_(*conds))
-            if query.min_area is not None:
-                q = q.filter(RealEstateORM.area >= query.min_area)
+            if query.area is not None:  # 최소 면적
+                q = q.filter(RealEstateORM.area >= query.area)
             if query.room_count is not None:
                 q = q.filter(RealEstateORM.room_count >= query.room_count)
             if query.bathroom_count is not None:

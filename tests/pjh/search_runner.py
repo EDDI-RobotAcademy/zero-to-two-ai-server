@@ -25,7 +25,7 @@ async def main():
     service = SearchListingsService(repo)
     query = SearchListingQuery(
         preferred_area=["영등포구", "마포구", "용산구"],
-        min_area=10.0,
+        area=10.0,
         room_count=None,
         bathroom_count=None,
         deal_type="전세",
@@ -52,4 +52,3 @@ if __name__ == "__main__":
     import asyncio
 
     asyncio.run(main())
-
