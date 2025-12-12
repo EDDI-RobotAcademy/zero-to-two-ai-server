@@ -4,7 +4,7 @@ Tenant Request Dependencies
 """
 from fastapi import Depends
 from sqlalchemy.orm import Session
-from shared.infrastructure.db.postgres import get_db_session
+from shared.infrastructure.db.dependencies import get_db
 from modules.tenant.adapter.output.persistence.tenant_request_repository import TenantRequestRepository
 from modules.tenant.application.usecase.create_tenant_request_usecase import CreateTenantRequestUsecase
 from modules.tenant.application.usecase.get_tenant_request_usecase import GetTenantRequestUsecase
@@ -16,7 +16,7 @@ from modules.real_estate.infrastructure.repository.real_estate_repository import
 from modules.tenant.application.usecase.get_recommend_list_usecase import GetRecommendListUsecase
 
 
-def get_tenant_request_repository(db: Session = Depends(get_db_session)) -> TenantRequestRepository:
+def get_tenant_request_repository(db: Session = Depends(get_db)) -> TenantRequestRepository:
     """임차인 요청 Repository 의존성"""
     return TenantRequestRepository(db)
 

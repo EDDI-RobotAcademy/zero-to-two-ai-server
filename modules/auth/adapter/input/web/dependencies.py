@@ -7,7 +7,7 @@ from modules.auth.application.service.token_service import TokenService
 from modules.auth.application.usecase.google_oauth2_handler import GoogleOAuth2Handler
 from modules.app_user.adapter.output.app_user_repository import AppUserRepository
 
-from shared.infrastructure.db.redis_client import get_redis_client
+from shared.infrastructure.db.dependencies import get_redis
 from shared.infrastructure.config.settings import load_settings
 from shared.infrastructure.db.postgres import SessionLocal
 
@@ -17,16 +17,6 @@ _settings = load_settings()
 # DB factory -----------------------------------------
 def _get_db_factory():
     return lambda: SessionLocal()
-
-
-# Redis client ----------------------------------------
-_redis_client = None
-
-def get_redis():
-    global _redis_client
-    if _redis_client is None:
-        _redis_client = get_redis_client()
-    return _redis_client
 
 
 # Token Repository (Port → Adapter) --------------------

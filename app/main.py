@@ -1,5 +1,7 @@
 """FastAPI 엔트리포인트: DI/bootstrap 및 라우터 등록."""
 import os
+import logging
+import time
 from dotenv import load_dotenv
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
@@ -34,6 +36,21 @@ def create_app() -> FastAPI:
         allow_headers=["*"],
     )
 
+    # 요청 로깅 설정 및 미들웨어
+    logging.basicConfig(
+        level=logging.INFO,
+        format="%(asctime)s %(levelname)s %(name)s %(message)s",
+    )
+    logger = logging.getLogger("app.request")
+
+    @app.middleware("http")
+    async def log_requests(request, call_next):
+        start = time.time()
+        response = await call_next(request)
+        elapsed = (time.time() - start) * 1000
+        logger.info("%s %s -> %s (%.1fms)", request.method, request.url.path, response.status_code, elapsed)
+        return response
+
     # 라우터 등록 (헬스/로그인/테넌트/파이프라인/LLM)
     app.include_router(health_router)
     app.include_router(auth_router)
@@ -59,8 +76,8 @@ def main() -> None:
 
     uvicorn.run(
         "app.main:app",
-        host=os.getenv("APP_HOST", "0.0.0.0"),
-        port=int(os.getenv("APP_PORT", "8000")),
+        host=os.getenv("APP_HOST"),
+        port=int(os.getenv("APP_PORT")),
         reload=True,
     )
 
