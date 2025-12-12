@@ -14,11 +14,11 @@ class Settings:
         self.env = os.environ.get("APP_ENV", "local")
 
         # DB 설정
-        self.PG_HOST = os.getenv("PG_HOST", "localhost")
-        self.PG_PORT = int(os.getenv("PG_PORT", "5432"))
-        self.PG_USER = os.getenv("PG_USER", "postgres")
-        self.PG_PASSWORD = os.getenv("PG_PASSWORD", "")
-        self.PG_DATABASE = os.getenv("PG_DATABASE", "postgres")
+        self.PG_HOST = os.getenv("POSTGRES_HOST", "localhost")
+        self.PG_PORT = int(os.getenv("POSTGRES_PORT", "5432"))
+        self.PG_USER = os.getenv("POSTGRES_USER", "postgres")
+        self.PG_PASSWORD = os.getenv("POSTGRES_PASSWORD", "")
+        self.PG_DATABASE = os.getenv("POSTGRES_DATABASE", "postgres")
 
         # 크롤링/기타 설정
         self.zigbang_item_ids = self._parse_int_list(os.environ.get("ZIGBANG_ITEM_IDS", ""))
