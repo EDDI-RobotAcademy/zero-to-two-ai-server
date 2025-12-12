@@ -50,7 +50,6 @@ def create_app() -> FastAPI:
     app.state.settings = settings
     return app
 
-
 app = create_app()
 
 

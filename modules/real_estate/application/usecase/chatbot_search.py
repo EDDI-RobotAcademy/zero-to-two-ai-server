@@ -12,11 +12,10 @@ from modules.real_estate.application.dto.embedding_dto import EmbedRequest
 from modules.real_estate.application.port_in.chatbot_search_port import ChatbotSearchPort
 from modules.real_estate.application.port_out.embedding_port import EmbeddingPort
 from modules.real_estate.application.port_out.real_estate_read_port import RealEstateReadPort
-from modules.real_estate.application.port_out.real_estate_embedding_search_port import (
+from modules.real_estate.application.port_out.real_estate_vector_search_port import (
     RealEstateVectorSearchPort,
     VectorSearchHit,
 )
-
 
 class ChatbotSearchService(ChatbotSearchPort):
     """자연어 메시지를 임베딩 검색으로 연결하는 유스케이스."""
