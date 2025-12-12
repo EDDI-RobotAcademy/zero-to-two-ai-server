@@ -9,23 +9,14 @@ from modules.app_user.adapter.output.app_user_repository import AppUserRepositor
 
 from shared.infrastructure.db.redis_client import get_redis_client
 from shared.infrastructure.config.settings import load_settings
-
-from sqlalchemy import create_engine
-from sqlalchemy.orm import sessionmaker
+from shared.infrastructure.db.postgres import SessionLocal
 
 
 _settings = load_settings()
 
 # DB factory -----------------------------------------
-_db_engine = None
-_SessionLocal = None
-
 def _get_db_factory():
-    global _db_engine, _SessionLocal
-    if _SessionLocal is None:
-        _db_engine = create_engine(_settings.DATABASE_URL, pool_pre_ping=True)
-        _SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=_db_engine)
-    return lambda: _SessionLocal()
+    return lambda: SessionLocal()
 
 
 # Redis client ----------------------------------------

@@ -9,7 +9,7 @@ class AppUserRepository:
     def find_by_email(self, email: str) -> Optional[Dict]:
         db: Session = self.db_session_factory()
         try:
-            user = db.query(AppUser).filter(AppUser.email == email, AppUser.is_deleted == False).first()
+            user: Optional[AppUser] = db.query(AppUser).filter(AppUser.email == email, AppUser.is_deleted.is_(False)).first()
             if not user:
                 return None
             return {
