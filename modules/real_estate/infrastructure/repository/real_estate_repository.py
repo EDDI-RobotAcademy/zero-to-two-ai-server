@@ -11,11 +11,14 @@ from modules.real_estate.application.dto.fetch_and_store_dto import RealEstateUp
 from modules.real_estate.application.port_out.real_estate_repository_port import (
     RealEstateRepositoryPort,
 )
+from modules.real_estate.application.port_out.real_estate_read_port import (
+    RealEstateReadPort,
+)
 from modules.real_estate.infrastructure.orm.real_estate_orm import RealEstateORM
 from shared.infrastructure.db.postgres import get_db_session
 
 
-class RealEstateRepository(RealEstateRepositoryPort):
+class RealEstateRepository(RealEstateRepositoryPort, RealEstateReadPort):
     """RealEstateRepositoryPort 구현체 - SQLAlchemy 기반."""
 
     def __init__(self, session_factory=get_db_session):
@@ -68,6 +71,17 @@ class RealEstateRepository(RealEstateRepositoryPort):
                 .all()
             )
             return {row[0] for row in rows}
+        finally:
+            session.close()
+
+    def fetch_by_ids(self, ids: Iterable[int]) -> Sequence[RealEstateORM]:
+        session: Session = self._session_factory()
+        try:
+            return (
+                session.query(RealEstateORM)
+                .filter(RealEstateORM.real_estate_list_id.in_(list(ids)))
+                .all()
+            )
         finally:
             session.close()
 

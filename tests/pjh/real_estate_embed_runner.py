@@ -28,6 +28,7 @@ logger = logging.getLogger(__name__)
 
 
 async def main():
+    # pgvector를 사용하므로 연결 시 확장이 설치되어 있어야 합니다.
     reader_writer = RealEstateEmbeddingRepository()
     summarizer = RuleBasedSummarizer()
     embedder = OpenAIEmbeddingAgent()
