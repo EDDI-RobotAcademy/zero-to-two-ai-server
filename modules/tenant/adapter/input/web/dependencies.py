@@ -11,6 +11,10 @@ from modules.tenant.application.usecase.get_tenant_request_usecase import GetTen
 from modules.tenant.application.usecase.update_tenant_request_usecase import UpdateTenantRequestUsecase
 from modules.tenant.application.usecase.delete_tenant_request_usecase import DeleteTenantRequestUsecase
 
+# Real Estate Search
+from modules.real_estate.infrastructure.repository.real_estate_repository import RealEstateRepository
+from modules.tenant.application.usecase.get_recommend_list_usecase import GetRecommendListUsecase
+
 
 def get_tenant_request_repository(db: Session = Depends(get_db_session)) -> TenantRequestRepository:
     """임차인 요청 Repository 의존성"""
@@ -43,3 +47,15 @@ def get_delete_tenant_request_usecase(
 ) -> DeleteTenantRequestUsecase:
     """임차인 요청 삭제 Usecase 의존성"""
     return DeleteTenantRequestUsecase(repository)
+
+
+def get_real_estate_repository() -> RealEstateRepository:
+    """부동산 매물 Repository 의존성"""
+    return RealEstateRepository()
+
+
+def get_recommend_list_usecase(
+    repository: RealEstateRepository = Depends(get_real_estate_repository)
+) -> GetRecommendListUsecase:
+    """임차인 추천 매물 조회 Usecase 의존성"""
+    return GetRecommendListUsecase(repository)

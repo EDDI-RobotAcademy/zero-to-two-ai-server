@@ -3,7 +3,9 @@ Tenant Request Router
 임차인 요청 API 엔드포인트
 """
 from fastapi import APIRouter, Depends, HTTPException, status
-from typing import List
+from typing import List, Optional
+
+from modules.tenant.application.dto.tenant_recommended_real_estate_dto import TenantRecommendedRealEstateDTO
 from modules.tenant.application.dto.tenant_request_dto import (
     TenantRequestCreateDTO,
     TenantRequestUpdateDTO,
@@ -11,7 +13,9 @@ from modules.tenant.application.dto.tenant_request_dto import (
     TenantRequestSummaryDTO,
     TenantRequestResponseDTO
 )
+from modules.tenant.application.dto.tenant_request_recommend_dto import TenantRequestRecommendDTO
 from modules.tenant.application.usecase.create_tenant_request_usecase import CreateTenantRequestUsecase
+from modules.tenant.application.usecase.get_recommend_list_usecase import GetRecommendListUsecase
 from modules.tenant.application.usecase.get_tenant_request_usecase import GetTenantRequestUsecase
 from modules.tenant.application.usecase.update_tenant_request_usecase import UpdateTenantRequestUsecase
 from modules.tenant.application.usecase.delete_tenant_request_usecase import DeleteTenantRequestUsecase
@@ -19,10 +23,10 @@ from modules.tenant.adapter.input.web.dependencies import (
     get_create_tenant_request_usecase,
     get_get_tenant_request_usecase,
     get_update_tenant_request_usecase,
-    get_delete_tenant_request_usecase
+    get_delete_tenant_request_usecase,
+    get_recommend_list_usecase
 )
 from modules.auth.adapter.input.auth_middleware import auth_required
-
 
 router = APIRouter(prefix="/tenant", tags=["Tenant Requests"])
 
@@ -145,3 +149,13 @@ def delete_tenant_request(
     except Exception as e:
         raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail=str(e))
 
+@router.post(
+    "/recommendations",
+    response_model=List[TenantRecommendedRealEstateDTO],
+)
+def recommend_real_estates(
+    dto: TenantRequestRecommendDTO,
+    user_id: int = Depends(auth_required),
+    usecase: GetRecommendListUsecase = Depends(get_recommend_list_usecase),
+):
+    return usecase.execute(dto, user_id)
