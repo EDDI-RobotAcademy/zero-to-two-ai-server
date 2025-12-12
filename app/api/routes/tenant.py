@@ -10,7 +10,7 @@ class TenantSearchRequest(BaseModel):
 router = APIRouter(prefix="/tenant")
 
 
-@router.post("/search")
+@router.post("/chatbot")
 def search_by_message(request: TenantSearchRequest):
     result = ask_llm(request.message)
     return {"response": result}
