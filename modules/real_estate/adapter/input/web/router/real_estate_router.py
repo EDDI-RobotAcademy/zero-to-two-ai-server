@@ -12,7 +12,7 @@ from modules.real_estate.infrastructure.repository.real_estate_repository import
     RealEstateRepository,
 )
 
-router = APIRouter(prefix="/tenant/listings", tags=["tenant-listings"])
+real_estate_search_router = APIRouter(prefix="/real_estate", tags=["Real Estate Handling"])
 
 
 class SearchRequest(BaseModel):
@@ -29,7 +29,7 @@ def get_search_service() -> SearchListingsService:
     return SearchListingsService(repo)
 
 
-@router.post("/search")
+@real_estate_search_router.post("/search")
 async def search_listings(
     req: SearchRequest, service: SearchListingsService = Depends(get_search_service)
 ):
