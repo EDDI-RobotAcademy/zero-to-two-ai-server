@@ -154,7 +154,7 @@ def run_range_crawl(usecase, settings):
 
 
 def _state_path():
-    return os.path.join(CURRENT_DIR, ".zigbang_crawl_state")
+    return os.path.join(CURRENT_DIR, ".crawl_state")
 
 
 def _load_state():
