@@ -9,7 +9,7 @@ class ChatbotSearchCommand:
     """자연어 메시지와 검색 옵션을 포함하는 입력 DTO."""
 
     message: str
-    top_k: int = 5
+    top_k: int = 10
 
 
 @dataclass
@@ -18,10 +18,13 @@ class ChatbotSearchListing:
 
     id: int
     title: str | None = None
-    price: int | None = None
-    region: str | None = None
-    score: float | None = None
-    url: str | None = None
+    address: str | None = None
+    deal: str | None = None
+    deposit: int | None = None
+    cost: int | None = None
+    area: float | None = None
+    room: int | None = None
+    bath: int | None = None
 
 
 @dataclass

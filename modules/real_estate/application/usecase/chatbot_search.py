@@ -73,9 +73,13 @@ class ChatbotSearchService(ChatbotSearchPort):
                     id=hit.real_estate_list_id,
                     # TODO: 유사 매물 응답값 상세 수정 필요
                     title=getattr(estate, "title", None),
-                    price=getattr(estate, "deposit", None),
-                    region=getattr(estate, "address1", None),
-                    score=hit.score,
+                    address=getattr(estate, "address", None),
+                    deal=getattr(estate, "deal", None),
+                    deposit=getattr(estate, "deposit", None),
+                    cost=getattr(estate, "cost", None),
+                    area=getattr(estate, "area", None),
+                    room=getattr(estate, "room", None),
+                    bath=getattr(estate, "bath", None),
                 )
             )
         return enriched
