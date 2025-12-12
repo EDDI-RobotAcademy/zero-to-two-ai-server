@@ -88,6 +88,10 @@ def logout(request: Request, token_service = Depends(get_token_service)):
       - session:{session_id} 삭제 (있다면)
       - client cookie 삭제
     """
+    env = os.getenv("ENV", "development")
+    secure_flag = True if env == "production" else False
+    frontend_url = os.getenv("FRONTEND_URL", "http://localhost:3000")
+
     # cookie-based logout flow
     cookie_refresh = request.cookies.get("refresh_token")
 
@@ -97,7 +101,13 @@ def logout(request: Request, token_service = Depends(get_token_service)):
         if user_id:
             token_service.logout(user_id) # refreshToken 삭제
 
-    # 응답에서 쿠키 제거
-    response = JSONResponse({"message": "logged out"})
-    response.delete_cookie("refresh_token", path="/authentication")
+    # 쿠키 제거 + 프론트 홈으로 리다이렉트
+    response = RedirectResponse(frontend_url, status_code=303)
+    response.delete_cookie(
+        "refresh_token",
+        path="/",  # refresh 경로 포함 전체 제거
+        httponly=True,
+        secure=secure_flag,
+        samesite="lax",
+    )
     return response

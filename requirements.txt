@@ -2,3 +2,8 @@ fastapi
 uvicorn
 openai
 python-dotenv
+requests
+PyJWT
+redis
+SQLAlchemy
+psycopg2-binary

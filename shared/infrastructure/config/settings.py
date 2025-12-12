@@ -19,6 +19,15 @@ class Settings:
             os.environ.get("ZIGBANG_CRAWL_ROUND_ROBIN", "false").lower() == "true"
         )
 
+        # Database 설정
+        db_host = os.getenv("DB_HOST", "localhost")
+        db_port = os.getenv("DB_PORT", "5432")
+        db_name = os.getenv("DB_DATABASE", "postgres")
+        db_user = os.getenv("DB_USERNAME", "postgres")
+        db_pass = os.getenv("DB_PASSWORD", "")
+
+        self.DATABASE_URL = f"postgresql://{db_user}:{db_pass}@{db_host}:{db_port}/{db_name}"
+
     def _parse_int_list(self, raw: str) -> List[int]:
         return [int(x) for x in raw.split(",") if x.strip().isdigit()]
 
@@ -30,15 +39,6 @@ class Settings:
             return int(raw) if raw is not None else None
         except (TypeError, ValueError):
             return None
-
-        # Database 설정
-        db_host = os.getenv("DB_HOST", "localhost")
-        db_port = os.getenv("DB_PORT", "5432")
-        db_name = os.getenv("DB_DATABASE", "postgres")
-        db_user = os.getenv("DB_USERNAME", "postgres")
-        db_pass = os.getenv("DB_PASSWORD", "")
-
-        self.DATABASE_URL = f"postgresql://{db_user}:{db_pass}@{db_host}:{db_port}/{db_name}"
 
 
 def load_settings() -> Settings:
