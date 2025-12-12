@@ -14,12 +14,19 @@ from modules.real_estate.application.port_out.real_estate_repository_port import
 from modules.real_estate.application.port_out.real_estate_read_port import (
     RealEstateReadPort,
 )
+from modules.real_estate.application.port_out.real_estate_search_port import (
+    RealEstateSearchPort,
+)
+from modules.real_estate.application.dto.search_listing_dto import (
+    SearchListingQuery,
+    SearchListingResult,
+)
 from modules.real_estate.infrastructure.orm.real_estate_orm import RealEstateORM
 from modules.tenant.application.dto.tenant_recommended_real_estate_dto import TenantRecommendedRealEstateDTO
 from shared.infrastructure.db.postgres import get_db_session
 
 
-class RealEstateRepository(RealEstateRepositoryPort, RealEstateReadPort):
+class RealEstateRepository(RealEstateRepositoryPort, RealEstateReadPort, RealEstateSearchPort):
     """RealEstateRepositoryPort 구현체 - SQLAlchemy 기반."""
 
     def __init__(self, session_factory=get_db_session):
@@ -83,6 +90,52 @@ class RealEstateRepository(RealEstateRepositoryPort, RealEstateReadPort):
                 .filter(RealEstateORM.real_estate_list_id.in_(list(ids)))
                 .all()
             )
+        finally:
+            session.close()
+
+    def search(self, query: SearchListingQuery) -> Sequence[SearchListingResult]:
+        session: Session = self._session_factory()
+        try:
+            q = session.query(RealEstateORM)
+            if query.preferred_area:
+                conds = [
+                    RealEstateORM.address.ilike(f"%{area}%")
+                    for area in query.preferred_area
+                    if area
+                ]
+                if conds:
+                    from sqlalchemy import or_
+
+                    q = q.filter(or_(*conds))
+            if query.area is not None:  # 최소 면적
+                q = q.filter(RealEstateORM.area >= query.area)
+            if query.room_count is not None:
+                q = q.filter(RealEstateORM.room_count >= query.room_count)
+            if query.bathroom_count is not None:
+                q = q.filter(RealEstateORM.bathroom_count >= query.bathroom_count)
+            if query.deal_type:
+                q = q.filter(RealEstateORM.deal_type == query.deal_type)
+            if query.budget is not None:
+                if query.deal_type == "매매":
+                    q = q.filter(RealEstateORM.cost <= query.budget)
+                else:
+                    q = q.filter(RealEstateORM.deposit <= query.budget)
+
+            rows = q.limit(100).all()
+            return [
+                SearchListingResult(
+                    real_estate_list_id=row.real_estate_list_id,
+                    title=row.title,
+                    address=row.address,
+                    deal_type=row.deal_type,
+                    deposit=row.deposit,
+                    cost=row.cost,
+                    area=row.area,
+                    room_count=row.room_count,
+                    bathroom_count=row.bathroom_count,
+                )
+                for row in rows
+            ]
         finally:
             session.close()
 
