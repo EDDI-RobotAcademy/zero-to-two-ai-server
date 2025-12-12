@@ -1,4 +1,4 @@
-from fastapi import APIRouter
+from fastapi import APIRouter, HTTPException
 from pydantic import BaseModel
 
 from infrastructure.llm.client import ask_llm
@@ -12,7 +12,10 @@ router = APIRouter(prefix="/tenant")
 
 @router.post("/chatbot")
 async def search_by_message(request: TenantSearchRequest):
-    result = await ask_llm(
-        request.message, top_k=request.top_k or 10, tenant_request_id=request.tenant_request_id
-    )
-    return {"response": result}
+    try:
+        result = await ask_llm(
+            request.message, top_k=request.top_k or 10, tenant_request_id=request.tenant_request_id
+        )
+        return {"response": result}
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))

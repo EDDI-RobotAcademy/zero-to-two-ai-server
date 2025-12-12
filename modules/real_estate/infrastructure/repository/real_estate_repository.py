@@ -225,7 +225,8 @@ class RealEstateRepository(RealEstateRepositoryPort, RealEstateReadPort, RealEst
                     cost=orm.cost,
                     deposit=orm.deposit,
                     address=orm.address,
-                    description=orm.description,
+                    # description 컬럼이 없어 detailed_explanation을 대신 사용
+                    description=getattr(orm, "description", None) or orm.detailed_explanation,
                 )
                 for orm in results
             ]
