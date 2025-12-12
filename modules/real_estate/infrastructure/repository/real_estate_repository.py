@@ -1,7 +1,7 @@
 from __future__ import annotations
 
 from dataclasses import asdict
-from typing import Iterable, Sequence, Set
+from typing import Iterable, Sequence, Set, Optional, List
 import json
 from datetime import datetime
 
@@ -22,6 +22,7 @@ from modules.real_estate.application.dto.search_listing_dto import (
     SearchListingResult,
 )
 from modules.real_estate.infrastructure.orm.real_estate_orm import RealEstateORM
+from modules.tenant.application.dto.tenant_recommended_real_estate_dto import TenantRecommendedRealEstateDTO
 from shared.infrastructure.db.postgres import get_db_session
 
 
@@ -169,3 +170,64 @@ class RealEstateRepository(RealEstateRepositoryPort, RealEstateReadPort, RealEst
             except ValueError:
                 continue
         return None
+
+
+    def search_for_tenant(
+        self,
+        preferred_area: Optional[str],
+        min_area: Optional[float],
+        room_count: Optional[int],
+        bathroom_count: Optional[int],
+        deal_type: Optional[str],
+        budget: Optional[int],
+        limit: int,
+    ) -> List[TenantRecommendedRealEstateDTO]:
+
+        session: Session = self._session_factory()
+        try:
+            query = session.query(RealEstateORM)
+
+            if preferred_area:
+                query = query.filter(
+                    RealEstateORM.address.contains(preferred_area)
+                )
+
+            if min_area:
+                query = query.filter(RealEstateORM.area >= min_area)
+
+            if room_count:
+                query = query.filter(RealEstateORM.room_count >= room_count)
+
+            if bathroom_count:
+                query = query.filter(
+                    RealEstateORM.bathroom_count >= bathroom_count
+                )
+
+            if deal_type:
+                query = query.filter(RealEstateORM.deal_type == deal_type)
+
+            if budget:
+                if deal_type in ("전세", "월세"):
+                    query = query.filter(RealEstateORM.deposit <= budget)
+                elif deal_type == "매매":
+                    query = query.filter(RealEstateORM.cost <= budget)
+
+            results = query.limit(limit).all()
+
+            return [
+                TenantRecommendedRealEstateDTO(
+                    real_estate_id=orm.real_estate_list_id,
+                    title=orm.title,
+                    area=orm.area,
+                    room_count=orm.room_count,
+                    bathroom_count=orm.bathroom_count,
+                    deal_type=orm.deal_type,
+                    cost=orm.cost,
+                    deposit=orm.deposit,
+                    address=orm.address,
+                    description=orm.description,
+                )
+                for orm in results
+            ]
+        finally:
+            session.close()
