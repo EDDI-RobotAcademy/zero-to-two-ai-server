@@ -3,19 +3,15 @@ from modules.user.adapter.input.web.router.user_router import register_user_hand
 from modules.user.adapter.output.in_memory_user_repository import InMemoryUserRepository
 from modules.user.application.usecase.register_user import RegisterUserService
 from shared.infrastructure.config.settings import load_settings
-from app.routes.llm import router as ai_router
-from app.api.llm import agent1, agent2, agent3
 from fastapi import FastAPI
+from app.api.routers.tenant import router as tenant_router
 app = FastAPI(
     title="Zero-To-Two AI Server",
     description="AI 기반 부동산 매칭 시스템 서버",
     version="0.1.0"
 )
 
-app.include_router(ai_router)
-app.include_router(agent1.router)
-app.include_router(agent2.router)
-app.include_router(agent3.router)
+app.include_router(tenant_router)
 
 def bootstrap():
     settings = load_settings()
