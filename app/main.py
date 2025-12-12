@@ -4,7 +4,7 @@ from modules.user.adapter.output.in_memory_user_repository import InMemoryUserRe
 from modules.user.application.usecase.register_user import RegisterUserService
 from shared.infrastructure.config.settings import load_settings
 from fastapi import FastAPI
-from app.api.routers.tenant import router as tenant_router
+from app.api.routes.tenant import router as tenant_router
 app = FastAPI(
     title="Zero-To-Two AI Server",
     description="AI 기반 부동산 매칭 시스템 서버",
